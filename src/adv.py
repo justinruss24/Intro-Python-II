@@ -38,6 +38,9 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
+from player import Player
+
+player1 = Player("Justin", room["outside"])
 
 # Write a loop that:
 #
