@@ -86,26 +86,26 @@ while has_started:
         if str(action[0].lower() == 'help'):
             print(player.location.description)
         elif str(action[0].lower() == 'n'):
-            if player.current_room.n_to:
-                player.current_room = player.current_room.n_to
+            if player.location.n_to:
+                player.location = player.location.n_to
                 pass
             else:
                 print('not a valid option, try again')
         elif str(action[0].lower() == 'w'):
-            if player.current_room.w_to:
-                player.current_room = player.current_room.w_to
+            if player.location.w_to:
+                player.location = player.location.w_to
                 pass
             else:
                 print('not a valid option, try again')
         elif str(action[0].lower() == 'e'):
-            if player.current_room.e_to:
-                player.current_room = player.current_room.e_to
+            if player.location.e_to:
+                player.location = player.location.e_to
                 pass
             else:
                 print('not a valid option, try again')
         elif str(action[0].lower() == 's'):
-            if player.current_room.s_to:
-                player.current_room = player.current_room.s_to
+            if player.location.s_to:
+                player.location = player.location.s_to
                 pass
             else:
                 print('not a valid option, try again')
