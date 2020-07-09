@@ -1,6 +1,14 @@
 from room import Room
+from player import Player
+from item import Item
 import sys
 import textwrap
+
+item = {
+    "sword": Item("sword", "its very sharp"),
+    "hat": Item("hat", "very fashionable"),
+    "bag": Item("bag", "should be good for carrying all your things")
+}
 
 # Declare all the rooms
 
@@ -40,7 +48,7 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
-from player import Player
+
 
 player1 = Player("Justin", room["outside"])
 
@@ -54,17 +62,13 @@ player1 = Player("Justin", room["outside"])
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
-while True:
-    for line in textwrap.wrap(player1.location.description):
-        print(line)
-    cmd_input = input(">").split(" ")
-    if cmd_input[0] == "q":
-        sys.exit()
-    elif cmd_input[0] in ["n", "e", "s", "w"]:
-        move_to = f"{cmd_input[0]}_to"
-        target_room = getattr(player1.location, move_to)
-        if target_room:
-            player1.location = target_room
-            print(f"\n{player1.location.name}:")
-        else:
-            print("You cannot go that way.")
+has_started = True
+is_playing = False
+while has_started:
+    player_name = input("welcome to the game! to get started, please state your name: ")
+    print("if you'd like to quit at any time, type 'q' to exit")
+    player = Player(player_name, room['outside'])
+    is_playing = True
+    while is_playing:
+        print("your current location is %s" % player.location)
+        action = input("the choice is yours, where would you like to go? move your character by typing 'n' for north, 's' for south, 'e' for east, and 'w' for west. for clues, type 'help': ").split(' ')
