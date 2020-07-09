@@ -5,9 +5,10 @@ import sys
 import textwrap
 
 item = {
+    "bag": Item("bag", "should be good for carrying all your things"),
     "sword": Item("sword", "its very sharp"),
     "hat": Item("hat", "very fashionable"),
-    "bag": Item("bag", "should be good for carrying all your things")
+    "treasure": Item("treasure", "congratulations! you've completed the search and found the treasure!")
 }
 
 # Declare all the rooms
@@ -30,6 +31,16 @@ to north. The smell of gold permeates the air."""),
 chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
+
+# adding items to rooms
+room['outside'].items[0] = item['bag']
+room['outside'].items.pop()
+
+room['foyer'].items[0] = item['sword']
+room['foyer'].items.pop()
+
+room['overlook'].items[0] = item['hat']
+room['overlook'].items.pop()
 
 
 # Link rooms together
@@ -72,3 +83,32 @@ while has_started:
     while is_playing:
         print("your current location is %s" % player.location)
         action = input("the choice is yours, where would you like to go? move your character by typing 'n' for north, 's' for south, 'e' for east, and 'w' for west. for clues, type 'help': ").split(' ')
+        if str(action[0].lower() == 'help'):
+            print(player.location.description)
+        elif str(action[0].lower() == 'n'):
+            if player.current_room.n_to:
+                player.current_room = player.current_room.n_to
+                pass
+            else:
+                print('not a valid option, try again')
+        elif str(action[0].lower() == 'w'):
+            if player.current_room.w_to:
+                player.current_room = player.current_room.w_to
+                pass
+            else:
+                print('not a valid option, try again')
+        elif str(action[0].lower() == 'e'):
+            if player.current_room.e_to:
+                player.current_room = player.current_room.e_to
+                pass
+            else:
+                print('not a valid option, try again')
+        elif str(action[0].lower() == 's'):
+            if player.current_room.s_to:
+                player.current_room = player.current_room.s_to
+                pass
+            else:
+                print('not a valid option, try again')
+        elif str(action[0].lower() == 'q'):
+            has_started = is_playing = False
+        
