@@ -111,4 +111,48 @@ while has_started:
                 print('not a valid option, try again')
         elif str(action[0].lower() == 'q'):
             has_started = is_playing = False
-        
+        elif str(action[0]).lower() == 'look':
+            if len(player.location.items) > 0:
+                for x in player.location.items:
+                    print('you can see a %s' % (x.name))
+                item_action = input(
+                    'would you like to take one of the items? type [get] [item name]: ').split(' ')
+                if str(item_action[1]).lower() == 'treasure':
+                    player.pick_up(player.location.items[0])
+                    print('youve found the treasure! you win!')
+                    is_playing, is_started = False, False
+                elif str(player.location.items[0]) == str(item_action[1]).lower():
+                    player.inventory.append(player.location.items[0])
+                    player.location.items.remove(
+                        player.location.items[0])
+                elif len(player.location.items) > 1:
+                    if str(player.location.items[1] == item_action[1]):
+                        player.pick_up(player.location.items[1])
+                    else:
+                        pass
+            else:
+                print(
+                    'besides the door you just came in from there doesnt seem to be anything')
+        elif str(action[0]).lower() == 'drop':
+            if len(action) == 1:
+                print('what item do you want to drop?')
+            elif len(action) > 1:
+                for i in player.inventory:
+                    if i.name == str(action[1]).lower():
+                        player.drop_item(i)
+                        pass
+                    else:
+                        print('you dont have that item')
+                        pass
+        elif str(action[0]).lower() == 'inventory':
+            for j in player.inventory:
+                print(j.name)
+        elif player.location.current.lower() == 'treasure':
+            print(
+                'you found the mad gods treasure! congratulations take your trophy and escape')
+            is_playing = False
+            is_started = False
+        elif str(action[0]).lower() == "command":
+            print('[n] [e] [s] [w] [help] [look] [q] [inventory] [drop]')
+        else:
+            print('not a valid option')
