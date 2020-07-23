@@ -8,7 +8,7 @@ item = {
     "bag": Item("bag", "should be good for carrying all your things"),
     "sword": Item("sword", "its very sharp"),
     "hat": Item("hat", "very fashionable"),
-    "treasure": Item("treasure", "congratulations! you've completed the search and found the treasure!")
+    "trophy": Item("trophy", "congratulations! you've completed the search and found the trophy!")
 }
 
 # Declare all the rooms
@@ -33,14 +33,26 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 # adding items to rooms
-room['outside'].items[0] = item['bag']
-room['outside'].items.pop()
-
-room['foyer'].items[0] = item['sword']
-room['foyer'].items.pop()
-
+room['foyer'].items[0] = item['bag']
+room['narrow'].items[0] = item['sword']
 room['overlook'].items[0] = item['hat']
-room['overlook'].items.pop()
+room['treasure'].items[0] = item['trophy']
+
+def hasItem():
+    if(player.location.items):
+        pickup = input("Looks like there's a %s, would you like to pick it up? Type 'y' for yes, and 'n' for no." % (player.location.items[0]))
+        if(pickup == 'y'):
+            player.inventory.append(item)
+            print("good choice! can't believe someone left this behind.")
+            player.location.items.clear()
+        elif(pickup == 'n'):
+            print("ok, if you say so.")
+        else:
+            print("that command doesn't do anything")
+    else:
+        print("looks like the room is empty.")
+
+
 
 
 # Link rooms together
@@ -61,7 +73,7 @@ room['treasure'].s_to = room['narrow']
 # Make a new player object that is currently in the 'outside' room.
 
 
-player1 = Player("Justin", room["outside"])
+
 
 # Write a loop that:
 #
@@ -73,86 +85,53 @@ player1 = Player("Justin", room["outside"])
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
-has_started = True
+is_started = True
 is_playing = False
-while has_started:
-    player_name = input("welcome to the game! to get started, please state your name: ")
-    print("if you'd like to quit at any time, type 'q' to exit")
+while is_started:
+    player_name = input("Welcome to the adventure game! What is your name?: ")
     player = Player(player_name, room['outside'])
+    print("Awesome,", player.name, ", you are currently", player.location,
+          ". To go anywhere, use 'n', 's', 'e', and 'w'. For help, type 'help', and to quit at any time, type 'q'!")
     is_playing = True
     while is_playing:
-        print("your current location is %s" % player.location)
-        action = input("the choice is yours, where would you like to go? move your character by typing 'n' for north, 's' for south, 'e' for east, and 'w' for west. for clues, type 'help': ").split(' ')
-        if str(action[0].lower() == 'help'):
-            print(player.location.description)
-        elif str(action[0].lower() == 'n'):
+        action = input("What would you like to do?: ").split(' ')
+        # print(action[0])
+        if str(action[0]) == 'help':
+            print(player.location)
+        elif str(action[0]) == 'q':
+            print("we hate to see you go so soon, but good luck on all future endeavors.")
+            is_playing = False
+        elif str(action[0]) == 'n':
             if player.location.n_to:
                 player.location = player.location.n_to
-                pass
+                print(player.location)
+                hasItem()
+                print(player.location)
             else:
-                print('not a valid option, try again')
-        elif str(action[0].lower() == 'w'):
-            if player.location.w_to:
-                player.location = player.location.w_to
-                pass
-            else:
-                print('not a valid option, try again')
-        elif str(action[0].lower() == 'e'):
-            if player.location.e_to:
-                player.location = player.location.e_to
-                pass
-            else:
-                print('not a valid option, try again')
-        elif str(action[0].lower() == 's'):
+                print("there is nothing in that direction..")
+        elif str(action[0]) == 's':
             if player.location.s_to:
                 player.location = player.location.s_to
-                pass
+                print(player.location)
+                hasItem()
+                print(player.location)
             else:
-                print('not a valid option, try again')
-        elif str(action[0].lower() == 'q'):
-            has_started = is_playing = False
-        elif str(action[0]).lower() == 'look':
-            if len(player.location.items) > 0:
-                for x in player.location.items:
-                    print('you can see a %s' % (x.name))
-                item_action = input(
-                    'would you like to take one of the items? type [get] [item name]: ').split(' ')
-                if str(item_action[1]).lower() == 'treasure':
-                    player.pick_up(player.location.items[0])
-                    print('youve found the treasure! you win!')
-                    is_playing, is_started = False, False
-                elif str(player.location.items[0]) == str(item_action[1]).lower():
-                    player.inventory.append(player.location.items[0])
-                    player.location.items.remove(
-                        player.location.items[0])
-                elif len(player.location.items) > 1:
-                    if str(player.location.items[1] == item_action[1]):
-                        player.pick_up(player.location.items[1])
-                    else:
-                        pass
+                print("there is nothing in that direction..")
+        elif str(action[0]) == 'w':
+            if player.location.w_to:
+                player.location = player.location.w_to
+                print(player.location)
+                hasItem()
+                print(player.location)
             else:
-                print(
-                    'besides the door you just came in from there doesnt seem to be anything')
-        elif str(action[0]).lower() == 'drop':
-            if len(action) == 1:
-                print('what item do you want to drop?')
-            elif len(action) > 1:
-                for i in player.inventory:
-                    if i.name == str(action[1]).lower():
-                        player.drop_item(i)
-                        pass
-                    else:
-                        print('you dont have that item')
-                        pass
-        elif str(action[0]).lower() == 'inventory':
-            for j in player.inventory:
-                print(j.name)
-        elif player.location.current.lower() == 'treasure':
-            print(
-                'you found the mad gods treasure! congratulations take your trophy and escape')
-            is_playing = False
-            is_started = False
-        elif str(action[0]).lower() == "command":
-            print('[n] [e] [s] [w] [help] [look] [q] [inventory] [drop]')
+                print("there is nothing in that direction..")
+        elif str(action[0]) == 'e':
+            if player.location.e_to:
+                player.location = player.location.e_to
+                print(player.location)
+                hasItem()
+                print(player.location)
+            else:
+                print("there is nothing in that direction..")
         else:
-            print('not a valid option')
+            print("That command won't do you any good.. Try again!")
